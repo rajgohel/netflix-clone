@@ -1,15 +1,28 @@
-import React from 'react';
-import { AiOutlineInfoCircle } from 'react-icons/ai';
+import React, { useCallback } from "react";
+import { AiOutlineInfoCircle } from "react-icons/ai";
 
-import useBillboard from '@/hooks/useBillboard';
-import PlayButton from './PlayButton';
+import useBillboard from "@/hooks/useBillboard";
+import PlayButton from "./PlayButton";
+import useInfoModalStore from "@/hooks/useInfoModalStore";
 
 const Billboard: React.FC = () => {
   const { data } = useBillboard();
+  const { openModal } = useInfoModalStore();
+
+  const handleOpenModal = useCallback(() => {
+    openModal(data?.id);
+  }, [openModal, data?.id]);
 
   return (
     <div className="relative h-[56.25vw]">
-      <video poster={data?.thumbnailUrl} className="w-full h-[56.25vw] object-cover brightness-[60%] transition duration-500" autoPlay muted loop src={data?.videoUrl}></video>
+      <video
+        poster={data?.thumbnailUrl}
+        className="w-full h-[56.25vw] object-cover brightness-[60%] transition duration-500"
+        autoPlay
+        muted
+        loop
+        src={data?.videoUrl}
+      ></video>
       <div className="absolute top-[30%] md:top-[40%] ml-4 md:ml-16">
         <p className="text-white text-1xl md:text-5xl h-full w-[50%] lg:text-6xl font-bold drop-shadow-xl">
           {data?.title}
@@ -18,8 +31,9 @@ const Billboard: React.FC = () => {
           {data?.description}
         </p>
         <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
-        <PlayButton movieId={data?.id} />
+          <PlayButton movieId={data?.id} />
           <button
+            onClick={handleOpenModal}
             className="
             bg-white
             text-white
@@ -36,13 +50,13 @@ const Billboard: React.FC = () => {
               hover:bg-opacity-20
               transition
             "
-            >
-              <AiOutlineInfoCircle className="w-4 md:w-7 mr-1" />
-              More Info
+          >
+            <AiOutlineInfoCircle className="w-4 md:w-7 mr-1" />
+            More Info
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 export default Billboard;
